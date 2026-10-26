@@ -1,0 +1,115 @@
+<USER_REQUEST>
+# PERAN & KONTEKS
+Kamu auditor teknis sekaligus peneliti yang sangat teliti. Proyek: script otomasi untuk ekstensi FASIH Batch yang mengubah dokumen keluarga SE2026 di FASIH (menihilkan usaha yang sudah tercatat via CAWI). Ini menyentuh data resmi milik banyak orang, jadi satu kesalahan krusial bisa merusak data warga. Prioritas: KEBENARAN dan KEAMANAN DATA, bukan kecepatan.
+
+# TUJUAN
+Lakukan riset dan verifikasi menyeluruh SEBELUM script ditulis. Hasilkan `research_report.md` (dan folder `evidence/` untuk skrip analisis dan keluaran mentah tanpa data pribadi). Laporan ini menjadi dasar finalisasi `implementation_plan.md`.
+
+# ATURAN KERAS
+1. READ-ONLY terhadap FASIH. Dilarang memanggil `patch`, `submitEdit`, `restore`, atau request tulis apa pun, dan dilarang menjalankan script T-01 sendiri. Aku yang menjalankannya dan menempelkan hasil.
+2. File Excel asli tidak boleh diubah. Kerja pada salinan di folder scratch. Skrip analisis boleh dibuat, tetapi hanya untuk membaca; simpan dan lampirkan di `evidence/`.
+3. DATA PRIBADI: jangan menampilkan nama KK, nama pengusaha, nama usaha, alamat, atau NIK asli di laporan, chat, atau log. Gunakan masking atau hash. Pencarian web hanya memakai istilah teknis generik, jangan menyertakan data dari dokumen atau Excel.
+4. Setiap klaim wajib berlabel bukti: [KODE file:baris], [EXCEL perintah+keluaran], [DOKUMEN hasil T-01], [WEB url + tanggal akses], atau [ASUMSI]. Klaim tanpa bukti otomatis berlabel ASUMSI.
+5. Bedakan "dibaca di kode" dari "dieksekusi/diuji". Jangan mengklaim sesuatu telah diuji jika tidak dijalankan.
+6. Jangan menyelesaikan ketidakpastian dengan menebak. Tulis "TIDAK DAPAT DIVERIFIKASI", sebutkan cara memverifikasi, dan siapa yang bisa menjawab.
+7. Jangan menulis kode script otomasi. Jangan memulai implementasi.
+8. Jika menemukan sesuatu yang bertentangan dengan PRD atau plan, tandai KRITIS, jangan memilih sendiri, dan laporkan di bagian awal laporan.
+
+# MASUKAN
+`prd.md`, `implementation_plan.md`, `lib/general_console.js`, `panel.js`, README, seluruh `batch-automation*.js` contoh, `Target Penyisiran Slawi.xlsx`, `1.jfif`–`4.jfif`, `diagnostic_t01.js`, dan hasil T-01 jika sudah kutempel. Sebutkan setiap file yang tidak ditemukan.
+
+# PERTANYAAN RISET (jawab SEMUA, bernomor, dengan label bukti)
+
+## R1. Audit kode ekstensi (`panel.js`, `lib/general_console.js`)
+1.1 Apakah baris diproses berurutan atau paralel? Tunjukkan kodenya.
+1.2 Bagaimana runner memanggil `process()`: argumen, bentuk return yang dikenali (`skip`, `ket`, `code`, dll.), perilaku saat `throw`, ada tidaknya retry otomatis.
+1.3 Adakah mekanisme berhenti dari dalam script atau tombol stop? Bisakah script membaca hitungan hasil baris sebelumnya? Jika tidak, usulkan alternatif tanpa memodifikasi ekstensi.
+1.4 Dry Run: apa persisnya yang dilewati (upload S3? commit?), apa yang dikembalikan `patch` (`nChanges`, `version`, `versionAfter`), dan apakah baris dengan ID yang sama pada Dry Run melihat dokumen asli yang sama.
+1.5 ID ganda (`unique:false`): apakah backup menyimpan ID yang sama berulang kali, dan apakah urutan eksekusi sama dengan urutan sheet.
+1.6 Baris dengan `assignment_id` kosong atau tidak valid: diabaikan atau ditandai error?
+1.7 Persistensi hasil: di mana status disimpan, apa yang hilang bila tab di-reload di tengah batch, adakah jalur resume.
+1.8 `patch`/`submitEdit`: urutan langkah persis, payload, penentuan versi, ada tidaknya pemeriksaan versi di klien, akibat bila upload S3 berhasil tetapi commit gagal, apakah status assignment berubah akibat commit, dan atas nama siapa commit dilakukan.
+1.9 `set`/`setAnswer`/`coerce`: perilaku bila key tidak ada di dokumen (menambah entri atau error), tidak ada di skema, nilai sudah sama (dihitung sebagai perubahan?), opsi tidak valid. Perilaku untuk tipe non-radio (angka, boolean, array) karena relevan untuk `jumlah_usaha`, `jumlah_usaha_ditemukan`, `ec_ada_usaha`, `label_usaha`, `art_pengusaha`.
+1.10 Backup/restore: isi backup (data, comment, media, versi), format, apakah restore bisa menimpa versi yang lebih baru, apa yang terjadi pada versi sesudah restore, apakah sudah pernah diuji.
+1.11 `comment.json` dan `media.json`: apakah dipertahankan apa adanya, apakah ada komentar atau anomali yang terikat roster yang dihapus.
+1.12 Keamanan ekstensi: periksa permission di manifest dan pastikan tidak ada panggilan jaringan ke luar domain BPS/S3 dan tidak ada telemetry.
+
+## R2. Audit script contoh
+Telaah setiap `batch-automation*.js`: pola mendeteksi roster, menghapus entri, dan `set`. Catat bug atau anti-pattern yang tidak boleh ditiru.
+
+## R3. Perilaku FormGear (kode di bundle/ekstensi bila ada; dokumentasi dan repositori resmi via web; skema dari `FASIH.init()`)
+3.1 Struktur `answers`: format per tipe komponen, indeks `#n`, indeks bersarang.
+3.2 Dependensi (`enableCondition`): saat komponen menjadi disabled, apakah jawabannya dihapus otomatis (saat render, load, atau submit) atau tersimpan sebagai yatim, dan apa dampaknya pada validasi.
+3.3 Komponen computed: apakah `jumlah_usaha_ditemukan`, `ec_ada_usaha`, dan sejenisnya dihitung otomatis dari jawaban lain sehingga `set` manual diabaikan atau ditimpa? Tentukan key mana yang wajib di-set dan mana yang cukup diturunkan.
+3.4 Roster: bagaimana entri `#n` dibuat dan dihapus, adakah key meta (counter, level, indeks) yang harus konsisten, dan referensi silang (`sourceOption`, `art_pengusaha`, `label_usaha`) ke roster.
+3.5 Logika tanda seru merah (!) dan syarat Blok P/I/II hijau, termasuk validasi yang mungkin gagal bila roster kosong tetapi Blok I = Tidak.
+3.6 Apakah membuka dokumen mengevaluasi ulang dan mengubah `answers` (auto-clear)?
+Bila hanya bisa dibuktikan lewat UI, rancang uji manual pada dokumen uji.
+
+## R4. Siklus dokumen dan operasional
+4.1 Nilai status assignment dan siapa yang boleh mengedit.
+4.2 Interaksi dengan sinkronisasi petugas FASIH mobile: apakah edit di server bisa tertimpa sinkronisasi perangkat, atau dokumen sedang terkunci petugas.
+4.3 Dampak pada progres atau dashboard.
+4.4 Pengaman agar hanya dokumen survei dan template keluarga SE2026 yang diproses (cek ID survei/template di dokumen).
+4.5 Ada tidaknya dokumen uji atau sandbox.
+Bila jawabannya tidak ada di kode, masukkan ke daftar pertanyaan untuk pengguna (R10).
+
+## R5. Profiling Excel (pada salinan; tampilkan perintah dan keluaran)
+5.1 Header, tipe kolom, jumlah baris data, baris kosong di ujung sheet.
+5.2 Nilai distinct kolom `kode_bang_label` dengan hitungan, termasuk varian spasi atau huruf.
+5.3 Validitas format UUID seluruh `assignment_id`, termasuk spasi tersembunyi dan beda huruf.
+5.4 Baris identik penuh vs baris berbeda dengan ID sama; konsistensi `nama_kk` dan `kode_bang_label` antar baris satu ID.
+5.5 Jumlah `nama_usaha` dan `nama_pengusaha` kosong per kategori; nama usaha ganda dalam satu ID.
+5.6 Uji fungsi normalisasi nama (huruf besar, hapus non-alfanumerik) pada data: berapa pasangan nama menjadi identik atau berbeda karena normalisasi, dan potensi salah-cocok.
+5.7 Distribusi per `kode_sls`/`nama_sls`: baris dan keluarga Campuran unik per SLS, SLS terkecil dan terbesar, usulan urutan batch dan ukuran SLS pertama yang cukup besar namun berisiko rendah.
+5.8 Rekonsiliasi ulang total: 9.075 baris, 8.498 ID unik, 3.155 baris dan 2.637 ID Campuran, 5.920 baris dan 5.861 ID BKU, 183 baris kosong ekor.
+5.9 Tegaskan di laporan bahwa angka 82,9% / 17,1% berasal dari jumlah baris Excel per ID, BUKAN jumlah usaha di dokumen FASIH, dan jelaskan implikasinya.
+
+## R6. Analisis hasil T-01 (setelah JSON kutempel)
+Bandingkan temuan dengan SETIAP asumsi di plan; daftar selisih; perbarui status TERVERIFIKASI/BELUM. Sebelum hasil ada, buat checklist verifikasi dan daftar dokumen sampel yang kubutuhkan: 1 usaha non-pertanian, >1 usaha, pertanian = Ya, status submitted/approved, sudah nihil, BKU, dan kasus tepi (nama usaha kosong).
+
+## R7. Kalibrasi dan pemantauan
+7.1 Definisikan satuan semua rasio (baris atau keluarga unik) dan penanganan ID ganda pada Dry Run agar hitungan sebanding dengan mode live.
+7.2 Rancang protokol SLS pertama: ukuran sampel minimal dan audit manual acak per kategori status (OK dan tiap jenis LEWATI) sebelum ambang dibekukan.
+7.3 Justifikasi ±12% / +15% atau ganti dengan dasar yang jelas. Pisahkan ambang per alasan LEWATI.
+7.4 Pastikan mekanisme berhenti yang diusulkan benar-benar tersedia (lihat 1.3).
+7.5 Ukur berapa baris LEWATI karena nama yang sebenarnya Skenario A (lewat audit manual) untuk menilai apakah normalisasi cukup. Jangan mengusulkan fuzzy match tanpa analisis risiko salah-cocok.
+
+## R8. Verifikasi pasca-eksekusi
+Rancang skrip read-only yang mengambil ulang setiap dokumen berstatus OK dan memeriksa invarian: 13 field Blok P = Tidak, Blok I seluruhnya Tidak, roster kosong, jumlah usaha 0, versi = sebelum + 1, dan tidak ada perubahan di luar field target (diff terhadap backup). Keluaran CSV tanpa data pribadi. Rancang juga rekonsiliasi OK + LEWATI + GAGAL = jumlah baris.
+
+## R9. Analisis mode kegagalan (FMEA)
+Tabel per langkah (fetch, parse, filter, scan, mutasi, zip, md5, presign, upload, commit, pasca-commit): mode gagal, efek, cara deteksi, mitigasi, tingkat keparahan. Wajib mencakup: dokumen diedit bersamaan, sesi kedaluwarsa, perubahan format data oleh pembaruan FASIH, ID ganda, tempelan Excel bergeser kolom, assignment dari survei lain, wilayah salah, dan batch dijalankan dua kali.
+
+## R10. Tata kelola dan pertanyaan untuk pengguna
+Daftar pertanyaan untuk aku dan supervisor BPS: kebenaran aturan bisnis (apakah menihilkan Blok P tepat untuk keluarga 1 usaha CAWI), otorisasi akun, jendela waktu eksekusi, komunikasi ke petugas lapangan, penyimpanan dan retensi backup serta log (berisi data pribadi), dan siapa yang menyetujui sebelum batch massal.
+
+# FORMAT `research_report.md` (Bahasa Indonesia)
+1. Temuan KRITIS (ringkas, di paling atas).
+2. Ringkasan eksekutif (maks. 15 baris).
+3. Jawaban R1–R10 bernomor, masing-masing dengan label bukti dan tingkat kepastian (TINGGI/SEDANG/RENDAH).
+4. Tabel asumsi diperbarui: asumsi, status, bukti, risiko jika salah.
+5. Daftar TIDAK DAPAT DIVERIFIKASI beserta cara memverifikasinya.
+6. Perubahan yang direkomendasikan pada `prd.md` dan `implementation_plan.md` (usulan saja, jangan diedit tanpa persetujuanku).
+7. Pertanyaan untuk pengguna.
+
+# SELF-CHECK SEBELUM MENYERAHKAN
+- [ ] Semua pertanyaan R1–R10 terjawab atau tercatat sebagai TIDAK DAPAT DIVERIFIKASI.
+- [ ] Setiap klaim punya label bukti; tidak ada klaim "teruji" untuk hal yang tidak dijalankan.
+- [ ] Tidak ada data pribadi asli di laporan atau `evidence/`.
+- [ ] Tidak ada operasi tulis ke FASIH dan tidak ada perubahan pada Excel asli.
+- [ ] Semua kontradiksi dengan PRD/plan ada di bagian KRITIS.
+
+Setelah selesai, tampilkan di chat: daftar temuan KRITIS, daftar TIDAK DAPAT DIVERIFIKASI, dan pertanyaan untukku. BERHENTI dan tunggu persetujuanku. Jangan menulis script otomasi.
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-10-23T07:23:23+07:00.
+
+The user's current state is as follows:
+Other open documents:
+- c:\Penyimpanan Utama\Downloads\Fasihbatch\fasih-extension-main\prd.md (LANGUAGE_MARKDOWN)
+- c:\Penyimpanan Utama\Downloads\Fasihbatch\fasih-extension-main\implementation_plan.md (LANGUAGE_MARKDOWN)
+</ADDITIONAL_METADATA>
+<USER_SETTINGS_CHANGE>
+The user changed setting `Model Selection` from Gemini 3.8 Flash (High) to Claude Sonnet 5.5 (Medium). No need to comment on this change if the user doesn't ask about it. If reporting what model you are, please use a human readable name instead of the exact string.
+</USER_SETTINGS_CHANGE>

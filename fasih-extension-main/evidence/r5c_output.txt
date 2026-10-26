@@ -1,0 +1,15 @@
+Per desa/kelurahan: (kec, desa) -> [ID Campuran, kandidat-bernama R3, ID 1-baris-Excel]
+   ('[100] SLAWI', '[007] PROCOT') [235, 0, 195]
+   ('[100] SLAWI', '[008] KUDAILE') [203, 0, 162]
+   ('[100] SLAWI', '[010] PAKEMBARAN') [387, 23, 330]
+   ('[100] SLAWI', '[006] KAGOK') [197, 31, 160]
+   ('[100] SLAWI', '[004] SLAWI KULON') [262, 34, 231]
+   ('[100] SLAWI', '[009] TRAYEMAN') [219, 40, 183]
+   ('[100] SLAWI', '[002] DUKUHWRINGIN') [323, 47, 262]
+   ('[100] SLAWI', '[005] SLAWI WETAN') [275, 50, 223]
+   ('[100] SLAWI', '[001] KALISAPU') [368, 55, 292]
+   ('[100] SLAWI', '[003] DUKUHSALAM') [168, 55, 148]
+
+Kandidat-bernama per SLS (hanya SLS dengan Campuran): n SLS=486, jumlah SLS dengan >=1 kandidat=133, max=23, median(kandidat>0)=2
+SLS dengan >=10 kandidat: 2 | >=5: 18 | >=3: 43
+total kandidat-bernama (R3): 335

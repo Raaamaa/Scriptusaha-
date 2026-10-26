@@ -1,0 +1,119 @@
+=== 5.1 Header, tipe, jumlah baris ===
+header (indeks:nama): {0: 'assignment_id', 1: 'geotag_latitude', 2: 'geotag_longitude', 3: 'kec', 4: 'desa', 5: 'kode_sls', 6: 'nama_sls', 7: 'nama_usaha_bang', 8: 'no_bang', 9: 'nama_kk', 10: 'kode_bang_label', 11: 'catatan', 12: 'JK_label', 13: 'umur', 14: 'nik_pengusaha', 15: 'Petugas', 16: 'Kode Identifier', 17: 'Nama Usaha', 18: 'Nama Pengusaha', 19: 'JK_label', 20: 'umur', 21: 'nik_pengusaha', 22: ''}
+baris XML setelah header: 9258 | baris data (tidak kosong): 9075 | baris kosong: 183
+baris kosong: nomor baris Excel min/max: 9077 9259 | kontigu di ekor: True
+filter Excel (definedName _FilterDatabase): A1:W9076  -> 9075 baris data (1 header)
+tipe sel per kolom:
+  A assignment_id      tipe=['s']  terisi=9075
+  B geotag_latitude    tipe=['n']  terisi=7471
+  C geotag_longitude   tipe=['n']  terisi=7471
+  D kec                tipe=['s']  terisi=9075
+  E desa               tipe=['s']  terisi=9075
+  F kode_sls           tipe=['s']  terisi=9073
+  G nama_sls           tipe=['s']  terisi=9075
+  H nama_usaha_bang    tipe=['s']  terisi=5884
+  I no_bang            tipe=['n']  terisi=7494
+  J nama_kk            tipe=['s']  terisi=3153
+  K kode_bang_label    tipe=['s']  terisi=9075
+  L catatan            tipe=['s']  terisi=4573
+  M JK_label(1)        tipe=['s']  terisi=3450
+  N umur(1)            tipe=['n']  terisi=3449
+  O nik_pengusaha(1)   tipe=['s']  terisi=3470
+  P Petugas            tipe=['n', 's']  terisi=3158
+  Q Kode Identifier    tipe=['s']  terisi=414
+  R Nama Usaha         tipe=['s']  terisi=405
+  S Nama Pengusaha     tipe=['s']  terisi=402
+  T JK_label(2)        tipe=['n', 's']  terisi=3852
+  U umur(2)            tipe=['n']  terisi=3851
+  V nik_pengusaha(2)   tipe=['s']  terisi=3872
+  W (header kosong)    tipe=['n', 's']  terisi=1180
+kolom W (header kosong): terisi=1180, distinct=773, contoh(mask)=['<17 ch #084b7861>', '<17 ch #084b7861>', '<17 ch #084b7861>']
+
+=== 5.2 Nilai distinct kolom K kode_bang_label (repr persis) ===
+  '1. Bangunan Khusus Usaha' : 5920
+  '2. Bangunan Campuran' : 3155
+  '' : 183
+varian setelah strip+lower: {'1. bangunan khusus usaha': 5920, '2. bangunan campuran': 3155, '': 183}
+
+=== 5.3 Validitas UUID kolom A ===
+baris data dengan A terisi: 9075 | A kosong pada baris data: 0
+UUID valid persis: 9075 | valid setelah strip: 9075 | tidak valid: 0
+A mengandung spasi tepi: 0 | karakter tersembunyi/nbsp/zero-width: 0 | mengandung huruf besar: 0 | panjang != 36: 0
+ID unik (persis): 8498 | ID unik (strip+lower): 8498 -> selisih akibat beda huruf/spasi: 0
+contoh nilai A tidak valid (mask): []
+
+=== 5.4 Duplikat ID: identik penuh vs berbeda; konsistensi J & K ===
+ID dengan >1 baris: 510 | total baris pada ID tsb: 1087
+baris 'ekstra' yang identik penuh dengan baris lain pada ID sama: 354
+ID yang SEMUA barisnya identik penuh: 309 | ID sebagian identik: 3
+kolom yang berbeda antar baris pada ID sama (jumlah ID): {'M(JK_label(1))': 9, 'N(umur(1))': 11, 'O(nik_pengusaha(1))': 9, 'P(Petugas)': 15, 'Q(Kode Identifier)': 69, 'R(Nama Usaha)': 66, 'S(Nama Pengusaha)': 59, 'T(JK_label(2))': 65, 'U(umur(2))': 70, 'V(nik_pengusaha(2))': 71, 'W((header kosong))': 144}
+ID multi-baris dengan nama_kk (J) tidak konsisten: 0 | dengan kode_bang_label (K) tidak konsisten: 0
+ID yang muncul di >1 kategori K: 0
+
+=== 5.5 Nama usaha / pengusaha kosong per kategori; nama usaha ganda dalam ID ===
+  K='1. Bangunan Khusus Usaha' baris=5920 | R(Nama Usaha) kosong=5920 | S(Nama Pengusaha) kosong=5920 | J(nama_kk) kosong=5920 | H(nama_usaha_bang) kosong=36 | R kosong & S terisi=0
+  K='2. Bangunan Campuran' baris=3155 | R(Nama Usaha) kosong=2750 | S(Nama Pengusaha) kosong=2753 | J(nama_kk) kosong=2 | H(nama_usaha_bang) kosong=3155 | R kosong & S terisi=1
+ID Campuran dengan nama usaha (R) ganda (norm_ex sama) di ID yang sama: 3
+
+=== 5.6 Fungsi normalisasi nama pada data ===
+-- Nama Usaha (R): n=405
+   raw != strip: 82 | spasi ganda: 4 | ada huruf kecil: 3 | ada non-ASCII: 0 | ada karakter tersembunyi: 0 | ada tanda baca/simbol selain huruf/angka/spasi: 214 | hanya angka: 0
+   hasil norm_plan kosong: 0 | hasil norm_ex kosong: 0
+   kelompok yang BERBEDA di norm_ex tetapi MENYATU di norm_plan (kolisi akibat buang simbol): 0 | nama yang terlibat: 0
+   contoh kolisi (hash, bukan nama): []
+-- nama_kk (J): n=3153
+   raw != strip: 42 | spasi ganda: 0 | ada huruf kecil: 0 | ada non-ASCII: 0 | ada karakter tersembunyi: 0 | ada tanda baca/simbol selain huruf/angka/spasi: 125 | hanya angka: 0
+   hasil norm_plan kosong: 0 | hasil norm_ex kosong: 0
+   kelompok yang BERBEDA di norm_ex tetapi MENYATU di norm_plan (kolisi akibat buang simbol): 1 | nama yang terlibat: 2
+   contoh kolisi (hash, bukan nama): [['551eb2dd', 'c937e582']]
+ID Campuran di mana norm_plan MENYATUKAN dua nama usaha yang berbeda menurut norm_ex: 0 | di mana norm_ex menyatukan nama beda hanya karena huruf/spasi: 0
+
+=== 5.7 Distribusi per SLS (kunci = kec|desa|kode_sls) ===
+jumlah SLS (kunci kec|desa|kode_sls): 649 | jumlah kode_sls unik saja: 145 | kode_sls unik per desa tidak menjamin unik global: True
+ID yang muncul di >1 SLS: 0
+keluarga Campuran unik per SLS: min=0 median=2 p25/p75=0.0/6.0 max=33 | SLS tanpa keluarga Campuran: 163
+baris per SLS: min=1 median=10 max=242
+10 SLS terkecil (berisi >=1 keluarga Campuran): (Campuran unik, calon-A menurut Excel, baris, kec, desa, kode_sls, nama_sls)
+    1 1 1 [100] SLAWI [001] KALISAPU 000100 RT 001 RW 001
+    1 1 1 [100] SLAWI [001] KALISAPU 001100 RT 001 RW 003
+    1 1 7 [100] SLAWI [001] KALISAPU 0027 RT 001 RW 006
+    1 1 1 [100] SLAWI [001] KALISAPU 004504 RT 001 RW 009
+    1 1 1 [100] SLAWI [001] KALISAPU 001200 RT 002 RW 003
+    1 1 9 [100] SLAWI [001] KALISAPU 0012 RT 002 RW 003
+    1 0 10 [100] SLAWI [001] KALISAPU 0023 RT 002 RW 005
+    1 1 2 [100] SLAWI [001] KALISAPU 004600 RT 002 RW 009
+    1 1 25 [100] SLAWI [001] KALISAPU 0008 RT 003 RW 002
+    1 1 7 [100] SLAWI [001] KALISAPU 0013 RT 003 RW 003
+10 SLS terbesar: (Campuran unik, calon-A menurut Excel, baris, kec, desa, kode_sls, nama_sls)
+    33 31 35 [100] SLAWI [009] TRAYEMAN 001500 RT 002 RW 004
+    30 28 32 [100] SLAWI [005] SLAWI WETAN 001100 RT 011 RW 004
+    28 25 31 [100] SLAWI [007] PROCOT 001800 RT 003 RW 004
+    27 19 40 [100] SLAWI [008] KUDAILE 000100 RT 001 RW 001
+    26 24 29 [100] SLAWI [010] PAKEMBARAN 002600 RT 005 RW 006
+    25 12 39 [100] SLAWI [006] KAGOK 000200 RT 002 RW 001
+    25 20 31 [100] SLAWI [005] SLAWI WETAN 001300 RT 013 RW 005
+    24 19 30 [100] SLAWI [009] TRAYEMAN 001400 RT 001 RW 004
+    23 17 29 [100] SLAWI [004] SLAWI KULON 000200 RT 002 RW 001
+    22 20 25 [100] SLAWI [010] PAKEMBARAN 003500 RT 002 RW 009
+SLS dengan 20-40 keluarga Campuran unik: 12
+  rasio calon-A (1 baris Excel / semua) per SLS pada SLS>=20 keluarga: min/median/max = 0.480 / 0.825 / 0.939
+  SLS>=20: n=12, stdev rasio=0.128
+  SLS<20: n=474, rasio min/median/max = 0.000 / 1.000 / 1.000
+
+=== 5.8 Rekonsiliasi total ===
+baris data: 9075 | baris kosong: 183 | total baris XML: 9258
+ID unik: 8498
+baris per K: {'1. Bangunan Khusus Usaha': 5920, '2. Bangunan Campuran': 3155}
+  K='1. Bangunan Khusus Usaha' baris=5920 ID unik=5861
+  K='2. Bangunan Campuran' baris=3155 ID unik=2637
+baris data dengan ID kosong: 0 | baris data dengan K kosong: 0
+baris kosong yang punya A terisi: 0 (harus 0)
+Cek: 9075 = 9075 ; 8498 = 8498 ; 3155/2637 ; 5920/5861 ; 183 = 183
+
+=== 5.9 Bahan: apa arti '1 baris Excel per ID' ===
+Campuran 1 baris: 2186 | dengan R & J terisi (kandidat-A maks. menurut Excel): 299 | R kosong: 1887 | J kosong: 2
+jumlah baris per ID Campuran: {1: 2186, 2: 398, 3: 41, 4: 11, 6: 1}
+pengusaha (S) berbeda antar baris pada ID multi-baris Campuran: 59 dari 451
+nama usaha (R) berbeda antar baris pada ID multi-baris Campuran: 66
+kolom H nama_usaha_bang terisi pada Campuran: 0 | H sama dengan R (norm_ex): 0
+kolom P Petugas terisi: 3158 | Q Kode Identifier terisi: 414 | distinct Q: 406

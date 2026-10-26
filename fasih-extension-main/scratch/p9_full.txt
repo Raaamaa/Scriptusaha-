@@ -1,0 +1,51 @@
+<USER_REQUEST>
+# PERAN & KONTEKS
+Kamu auditor teknis sekaligus peneliti yang sangat teliti. Proyek: script otomasi untuk ekstensi FASIH Batch yang mengubah dokumen keluarga SE2026 di FASIH (menihilkan usaha yang sudah tercatat via CAWI). Ini menyentuh data resmi milik banyak orang, jadi satu kesalahan krusial bisa merusak data warga. Prioritas: KEBENARAN dan KEAMANAN DATA, bukan kecepatan.
+
+# TUJUAN
+Lakukan riset dan verifikasi menyeluruh SEBELUM script ditulis. Hasilkan `research_report.md` (dan folder `evidence/` untuk skrip analisis dan keluaran mentah tanpa data pribadi). Laporan ini menjadi dasar finalisasi `implementation_plan.md`.
+
+# ATURAN KERAS
+1. READ-ONLY terhadap FASIH. Dilarang memanggil `patch`, `submitEdit`, `restore`, atau request tulis apa pun, dan dilarang menjalankan script T-01 sendiri. Aku yang menjalankannya dan menempelkan hasil.
+2. File Excel asli tidak boleh diubah. Kerja pada salinan di folder scratch. Skrip analisis boleh dibuat, tetapi hanya untuk membaca; simpan dan lampirkan di `evidence/`.
+3. DATA PRIBADI: jangan menampilkan nama KK, nama pengusaha, nama usaha, alamat, atau NIK asli di laporan, chat, atau log. Gunakan masking atau hash. Pencarian web hanya memakai istilah teknis generik, jangan menyertakan data dari dokumen atau Excel.
+4. Setiap klaim wajib berlabel bukti: [KODE file:baris], [EXCEL perintah+keluaran], [DOKUMEN hasil T-01], [WEB url + tanggal akses], atau [ASUMSI]. Klaim tanpa bukti otomatis berlabel ASUMSI.
+5. Bedakan "dibaca di kode" dari "dieksekusi/diuji". Jangan mengklaim sesuatu telah diuji jika tidak dijalankan.
+6. Jangan menyelesaikan ketidakpastian dengan menebak. Tulis "TIDAK DAPAT DIVERIFIKASI", sebutkan cara memverifikasi, dan siapa yang bisa menjawab.
+7. Jangan menulis kode script otomasi. Jangan memulai implementasi.
+8. Jika menemukan sesuatu yang bertentangan dengan PRD atau plan, tandai KRITIS, jangan memilih sendiri, dan laporkan di bagian awal laporan.
+
+# MASUKAN
+`prd.md`, `implementation_plan.md`, `lib/general_console.js`, `panel.j
+<truncated 7601 bytes>
+saha CAWI), otorisasi akun, jendela waktu eksekusi, komunikasi ke petugas lapangan, penyimpanan dan retensi backup serta log (berisi data pribadi), dan siapa yang menyetujui sebelum batch massal.
+
+# FORMAT `research_report.md` (Bahasa Indonesia)
+1. Temuan KRITIS (ringkas, di paling atas).
+2. Ringkasan eksekutif (maks. 15 baris).
+3. Jawaban R1–R10 bernomor, masing-masing dengan label bukti dan tingkat kepastian (TINGGI/SEDANG/RENDAH).
+4. Tabel asumsi diperbarui: asumsi, status, bukti, risiko jika salah.
+5. Daftar TIDAK DAPAT DIVERIFIKASI beserta cara memverifikasinya.
+6. Perubahan yang direkomendasikan pada `prd.md` dan `implementation_plan.md` (usulan saja, jangan diedit tanpa persetujuanku).
+7. Pertanyaan untuk pengguna.
+
+# SELF-CHECK SEBELUM MENYERAHKAN
+- [ ] Semua pertanyaan R1–R10 terjawab atau tercatat sebagai TIDAK DAPAT DIVERIFIKASI.
+- [ ] Setiap klaim punya label bukti; tidak ada klaim "teruji" untuk hal yang tidak dijalankan.
+- [ ] Tidak ada data pribadi asli di laporan atau `evidence/`.
+- [ ] Tidak ada operasi tulis ke FASIH dan tidak ada perubahan pada Excel asli.
+- [ ] Semua kontradiksi dengan PRD/plan ada di bagian KRITIS.
+
+Setelah selesai, tampilkan di chat: daftar temuan KRITIS, daftar TIDAK DAPAT DIVERIFIKASI, dan pertanyaan untukku. BERHENTI dan tunggu persetujuanku. Jangan menulis script otomasi.
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-10-23T07:23:23+07:00.
+
+The user's current state is as follows:
+Other open documents:
+- c:\Penyimpanan Utama\Downloads\Fasihbatch\fasih-extension-main\prd.md (LANGUAGE_MARKDOWN)
+- c:\Penyimpanan Utama\Downloads\Fasihbatch\fasih-extension-main\implementation_plan.md (LANGUAGE_MARKDOWN)
+</ADDITIONAL_METADATA>
+<USER_SETTINGS_CHANGE>
+The user changed setting `Model Selection` from Gemini 3.8 Flash (High) to Claude Sonnet 5.5 (Medium). No need to comment on this change if the user doesn't ask about it. If reporting what model you are, please use a human readable name instead of the exact string.
+</USER_SETTINGS_CHANGE>

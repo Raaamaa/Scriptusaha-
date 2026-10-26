@@ -1,0 +1,33 @@
+=== B1. ID Campuran: 2637 | baris: 3155
+jumlah baris DISTINCT (semua kolom A..W identik dianggap 1) per ID Campuran: {1: 2447, 2: 171, 3: 16, 4: 3}
+jumlah nama usaha (R) DISTINCT non-kosong per ID Campuran: {0: 2269, 1: 335, 2: 32, 3: 1}
+  R1 plan apa adanya: tepat 1 baris Excel & R,J terisi                     299  (11.3% dari 2637 ID Campuran)
+  R2 1 baris distinct (duplikat identik dilebur) & R,J terisi              299  (11.3% dari 2637 ID Campuran)
+  R3 tepat 1 nama usaha (R) distinct & J terisi                            335  (12.7% dari 2637 ID Campuran)
+  R4 tepat 1 baris Excel saja (abaikan R)                                 2186  (82.9% dari 2637 ID Campuran)
+  R5 1 baris distinct saja (abaikan R)                                    2447  (92.8% dari 2637 ID Campuran)
+ID Campuran TANPA nama usaha di baris mana pun: 2269 | dengan >=1 nama usaha: 368
+
+=== B2. Pola isian kolom pada baris Campuran (n=3155) ===
+pola huruf kolom terisi (J M N O Q R S T U V W) -> jumlah baris (10 teratas): [('J', 1604), ('JW', 1132), ('JQRSTUV', 361), ('JQRSTUVW', 40), ('JQ', 11), ('JRW', 3), ('', 2), ('JQSTUVW', 1), ('JQR', 1)]
+baris Campuran dengan R kosong tetapi pasangan (M/N/O atau T/U/V) terisi: 1
+baris Campuran dengan Q terisi: 414 | R terisi: 405 | keduanya: 402
+baris BKU dengan Q terisi: 0
+baris Campuran dengan J kosong: 2 (ID unik: 2 )
+
+=== B3. Kolom L 'catatan': terisi=4573, distinct=3509. Label berfrekuensi >=30 (kategori, bukan PII): ===
+   '-' : 180
+   'DATA SUDAH SESUAI DENGAN KONDISI DI LAPANGAN' : 78
+   catatan terisi menurut K:  {'2. Bangunan Campuran': 1892, '1. Bangunan Khusus Usaha': 2681}
+kolom W: panjang distinct: {17: 101, 15: 76, 5: 647, 21: 94, 11: 3, 19: 85, 13: 32, 6: 7, 10: 18, 18: 2, 23: 9, 3: 9, 4: 95, 7: 2} | semua digit: 0 | menurut K: {'2. Bangunan Campuran': 1176, '1. Bangunan Khusus Usaha': 4}
+kolom P Petugas: distinct = 21 | terisi menurut K: {'2. Bangunan Campuran': 3154, '1. Bangunan Khusus Usaha': 4}
+kolom M/T JK_label & N/U umur & O/V NIK terisi menurut K: {'M': {'1': 3450}, 'N': {'1': 3449}, 'O': {'1': 3470}, 'T': {'2': 402, '1': 3450}, 'U': {'2': 402, '1': 3449}, 'V': {'2': 402, '1': 3470}}
+
+=== B4. Posisi duplikat di sheet ===
+ID multi-baris (semua kategori): 510 | baris-barisnya BERURUTAN (kontigu): 441 | tersebar: 69
+rentang jarak baris pertama-terakhir per ID multi: min/median/max = 1 1.0 555
+ID Campuran multi-baris: 451 | kontigu: 425
+baris Campuran 'kemunculan ke-2 dst' (akan melihat dokumen yang sudah diubah pada LIVE, tetapi dokumen asli pada DRY RUN): 518
+
+=== B5. Dampak Layer-1 plan (nama_usaha & nama_kk wajib terisi) pada baris Campuran ===
+baris lolos: 405 (12.8%) | baris LEWATI di Layer-1: 2750 (87.2%)
